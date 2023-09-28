@@ -42,5 +42,5 @@ document.addEventListener("DOMContentLoaded", () => {
       filters = filtres;
       createFilter(filters);
     })
-    .catch((error) => window.alert("Something went wrong."));
+    .catch((error) => window.alert("Il y a eu un problème."));
 });

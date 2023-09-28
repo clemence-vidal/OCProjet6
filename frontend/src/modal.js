@@ -144,14 +144,35 @@ function deleteButton(e) {
 }
 
 function validateAddImage() {
+  const imgInput = document.querySelector("#image");
+  const titleInput = document.querySelector("#titre");
+  const categorySelect = document.querySelector("#categorie");
+  const imgFile = imgInput.files[0];
+  const title = titleInput.value;
+  const category = categorySelect.value;
+
+  if (imgInput.files.length === 0) {
+    alert("Veuillez sélectionner une image.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("image", imgFile);
+  formData.append("title", title);
+  formData.append("category", category);
+
   fetch(`http://localhost:5678/api/works`, {
     method: "POST",
-    body: multipart / form - data,
-  }).then (response.ok) {
-    
-  }
-  
-  ;
+    body: formData,
+  })
+    .then((response) => {
+      if (response.ok) {
+        alert("La photo a bien été ajoutée");
+      } else {
+        alert("Quelque chose s'est mal passé.");
+      }
+    })
+    .catch((error) => {});
 }
 
 document.addEventListener("DOMContentLoaded", function () {
