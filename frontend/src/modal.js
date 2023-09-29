@@ -144,26 +144,26 @@ function deleteButton(e) {
 }
 
 function validateAddImage() {
-  const imgInput = document.querySelector("#image");
-  const titleInput = document.querySelector("#titre");
-  const categorySelect = document.querySelector("#categorie");
-  const imgFile = imgInput.files[0];
-  const title = titleInput.value;
-  const category = categorySelect.value;
+  // const imgInput = document.querySelector("#image");
+  // const titleInput = document.querySelector("#titre");
+  // const categorySelect = document.querySelector("#categorie");
+  // const imgFile = imgInput.files[0];
+  // const title = titleInput.value;
+  // const category = categorySelect.value;
 
-  if (imgInput.files.length === 0) {
-    alert("Veuillez sélectionner une image.");
-    return;
-  }
+  // if (imgInput.files.length === 0) {
+  //   alert("Veuillez sélectionner une image.");
+  //   return;
+  // }
 
-  const formData = new FormData();
-  formData.append("image", imgFile);
-  formData.append("title", title);
-  formData.append("category", category);
+  // const formData = new FormData();
+  // formData.append("image", imgFile);
+  // formData.append("title", title);
+  // formData.append("category", category);
 
   fetch(`http://localhost:5678/api/works`, {
     method: "POST",
-    body: formData,
+    // body: formData,
   })
     .then((response) => {
       if (response.ok) {
@@ -173,6 +173,27 @@ function validateAddImage() {
       }
     })
     .catch((error) => {});
+}
+
+const input = document.querySelector(".works-modal input");
+const output = document.querySelector(".works-modal output");
+let selectedImage = null;
+
+input.addEventListener("change", function () {
+  const file = input.files[0];
+  if (file) {
+    selectedImage = file;
+    displayImage();
+  }
+});
+
+function displayImage() {
+  if (selectedImage) {
+    const img = document.querySelector(".works-modal img");
+    img.innerHTML = "";
+    img.src = URL.createObjectURL(selectedImage);
+    output.appendChild(img);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -190,9 +211,22 @@ document.addEventListener("DOMContentLoaded", function () {
   getWorks();
   // showWorks();
   // renderWorks();
-  document
-    .querySelector(".submit-button")
-    .addEventListener("click", validateAddImage);
+  // document
+  //   .querySelector(".submit-button")
+  //   .addEventListener("click", validateAddImage);
+
+  // const imgInput = document.querySelector("#image");
+  // const addImgBtn = document.querySelector(".custom-file-label");
+  // addImgBtn.addEventListener("click", (e) => {
+  //   e.preventDefault;
+  //   imgInput.click();
+  // });
+  // imgInput.addEventListener("change", (event) => {
+  //   const selectedFile = event.target.files[0];
+  //   if (selectedFile) {
+  //     console.log("Fichier sélectionné :", selectedFile.name);
+  //   }
+  // });
 });
 
 window.addEventListener("keydown", function (e) {
