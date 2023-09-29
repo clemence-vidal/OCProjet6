@@ -1,7 +1,8 @@
 let modal = null;
-const focusableSelector = "button";
+const focusableSelector = "button, label, input, select";
 let focusables = [];
 
+// ouvrir la modale Galerie photo
 const openModal = function (e) {
   e.preventDefault();
   modal = document.querySelector(".modal");
@@ -17,6 +18,7 @@ const openModal = function (e) {
   showWorks();
 };
 
+// ouvrir la modale Ajout photo
 const openModal2 = function (e) {
   e.preventDefault();
   modal = document.querySelector(".modal2");
@@ -33,6 +35,7 @@ const openModal2 = function (e) {
     .addEventListener("click", stopPropagation);
 };
 
+// fermer la modale Galerie photo
 const closeModal = function (e) {
   if (modal === null) return;
   e.preventDefault();
@@ -49,6 +52,7 @@ const closeModal = function (e) {
   modal = null;
 };
 
+// fermer la modale Ajout photo
 const closeModal2 = function (e) {
   if (modal === null) return;
   e.preventDefault();
@@ -69,6 +73,7 @@ const stopPropagation = function (e) {
   e.stopPropagation();
 };
 
+// pour focus input, button, etc
 const focusInModal = function (e) {
   e.preventDefault();
   let index = focusables.findIndex((f) => f === modal.querySelector(":focus"));
@@ -79,6 +84,7 @@ const focusInModal = function (e) {
   focusables[index].focus();
 };
 
+// afficher les images de la galerie dans la Galerie photo
 const modalWorks = document.querySelector(".works");
 
 function showWorks() {
@@ -111,6 +117,7 @@ function showWorks() {
   });
 }
 
+// bouton suppression
 function deleteButton(e) {
   const square = e.currentTarget;
   const imgId = square.id;
@@ -143,27 +150,25 @@ function deleteButton(e) {
   }
 }
 
+// bouton valider ajout d'image
 function validateAddImage() {
-  // const imgInput = document.querySelector("#image");
-  // const titleInput = document.querySelector("#titre");
-  // const categorySelect = document.querySelector("#categorie");
-  // const imgFile = imgInput.files[0];
-  // const title = titleInput.value;
-  // const category = categorySelect.value;
-
-  // if (imgInput.files.length === 0) {
-  //   alert("Veuillez sélectionner une image.");
-  //   return;
-  // }
-
-  // const formData = new FormData();
-  // formData.append("image", imgFile);
-  // formData.append("title", title);
-  // formData.append("category", category);
-
+  const imgInput = document.querySelector("#image");
+  const titleInput = document.querySelector("#titre");
+  const categorySelect = document.querySelector("#categorie");
+  const imgFile = imgInput.files[0];
+  const title = titleInput.value;
+  const category = categorySelect.value;
+  if (imgInput.files.length === 0) {
+    alert("Veuillez sélectionner une image.");
+    return;
+  }
+  const formData = new FormData();
+  formData.append("image", imgFile);
+  formData.append("title", title);
+  formData.append("category", category);
   fetch(`http://localhost:5678/api/works`, {
     method: "POST",
-    // body: formData,
+    body: formData,
   })
     .then((response) => {
       if (response.ok) {
@@ -175,10 +180,10 @@ function validateAddImage() {
     .catch((error) => {});
 }
 
+// ajouter l'affichage de l'image sur la fenêtre modale
 const input = document.querySelector(".works-modal input");
 const output = document.querySelector(".works-modal output");
 let selectedImage = null;
-
 input.addEventListener("change", function () {
   const file = input.files[0];
   if (file) {
@@ -186,7 +191,6 @@ input.addEventListener("change", function () {
     displayImage();
   }
 });
-
 function displayImage() {
   if (selectedImage) {
     const img = document.querySelector(".works-modal img");
@@ -211,22 +215,9 @@ document.addEventListener("DOMContentLoaded", function () {
   getWorks();
   // showWorks();
   // renderWorks();
-  // document
-  //   .querySelector(".submit-button")
-  //   .addEventListener("click", validateAddImage);
-
-  // const imgInput = document.querySelector("#image");
-  // const addImgBtn = document.querySelector(".custom-file-label");
-  // addImgBtn.addEventListener("click", (e) => {
-  //   e.preventDefault;
-  //   imgInput.click();
-  // });
-  // imgInput.addEventListener("change", (event) => {
-  //   const selectedFile = event.target.files[0];
-  //   if (selectedFile) {
-  //     console.log("Fichier sélectionné :", selectedFile.name);
-  //   }
-  // });
+  document
+    .querySelector(".container-button .submit-button")
+    .addEventListener("click", validateAddImage);
 });
 
 window.addEventListener("keydown", function (e) {
