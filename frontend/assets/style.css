@@ -316,8 +316,16 @@ li:hover{
 	color: white;
 }
 
+.modal .add-button:hover {
+	background-color: #114138;
+}
+
 .modal2 .submit-button {	
 	background-color: #A7A7A7;
+}
+
+.modal2 .submit-button:hover {	
+	background-color: #1D6154;
 }
 
 .modal2 form,

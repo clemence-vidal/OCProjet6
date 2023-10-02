@@ -121,7 +121,8 @@ function showWorks() {
 function deleteButton(e) {
   const square = e.currentTarget;
   const imgId = square.id;
-
+  const token = localStorage.getItem("token");
+  console.log(token);
   const confirmation = window.confirm(
     "Êtes-vous sûr de vouloir supprimer cet élément?"
   );
@@ -129,7 +130,9 @@ function deleteButton(e) {
   if (confirmation) {
     fetch(`http://localhost:5678/api/works/${imgId}`, {
       method: "DELETE",
-      headers: { Authorization: "Bearer S0phie" },
+      headers: {
+        Authorization: "Bearer " + token,
+      },
     })
       .then((response) => {
         if (response.ok) {
@@ -152,6 +155,7 @@ function deleteButton(e) {
 
 // bouton valider ajout d'image
 function validateAddImage() {
+  const token = localStorage.getItem("token");
   const imgInput = document.querySelector("#image");
   const titleInput = document.querySelector("#titre");
   const categorySelect = document.querySelector("#categorie");
@@ -166,13 +170,18 @@ function validateAddImage() {
   formData.append("image", imgFile);
   formData.append("title", title);
   formData.append("category", category);
+  formData.append("efsefesf", "zqzdqzdqzd");
+  console.log(formData);
   fetch(`http://localhost:5678/api/works`, {
     method: "POST",
     body: formData,
+    headers: {
+      Authorization: "Bearer " + token,
+    },
   })
     .then((response) => {
       if (response.ok) {
-        alert("La photo a bien été ajoutée");
+        alert("La photo a bien été ajoutée.");
       } else {
         alert("Quelque chose s'est mal passé.");
       }
