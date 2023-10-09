@@ -13,9 +13,13 @@ async function login(email, password) {
         password: password,
       }),
     });
-    return response.json();
-    // console.log(response.json());
-    //
+    if (response.ok) {
+      return response.json();
+    } else {
+      errorMessage.style.display = "block";
+      errorMessage.textContent =
+        "Veuillez vérifier les informations renseignées";
+    }
   } catch (err) {
     console.log(err);
   }
@@ -24,16 +28,7 @@ async function login(email, password) {
 userLogin.addEventListener("submit", (event) => {
   event.preventDefault();
   login(email.value, password.value).then((response) => {
-    console.log(response);
-    if (response.token) {
-      localStorage.setItem("token", response.token);
-      window.location.href = "index.html";
-    } else {
-      // if (response.status === 404 || response.status === 401) {
-      errorMessage.style.display = "block";
-      errorMessage.textContent =
-        "Veuillez vérifier les informations renseignées";
-    }
-    // }
+    localStorage.setItem("token", response.token);
+    window.location.href = "index.html";
   });
 });

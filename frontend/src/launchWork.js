@@ -15,6 +15,7 @@ function renderWorks(works) {
     const figure = document.createElement("figure");
     const img = document.createElement("img");
     const figcaption = document.createElement("figcaption");
+    figure.id = work.id;
     img.src = work.imageUrl;
     figcaption.innerHTML = work.title;
     gallery.appendChild(figure);

@@ -15,7 +15,9 @@ const openModal = function (e) {
   modal
     .querySelector(".js-modal-stop")
     .addEventListener("click", stopPropagation);
-  showWorks();
+  getWorks().then((response) => {
+    showWorks(response);
+  });
 };
 
 // ouvrir la modale Ajout photo
@@ -87,42 +89,41 @@ const focusInModal = function (e) {
 // afficher les images de la galerie dans la Galerie photo
 const modalWorks = document.querySelector(".works");
 
-function showWorks() {
-  getWorks().then((works) => {
-    const worksModal = document.createElement("div");
-    modalWorks.appendChild(worksModal);
-    modalWorks.innerHTML = "";
-    for (let work of works) {
-      const img = document.createElement("img");
-      img.src = work.imageUrl;
-      img.id = work.id;
-      modalWorks.appendChild(img);
-    }
-    const images = modalWorks.querySelectorAll("img");
-    images.forEach(function (image) {
-      const imageWrapper = document.createElement("div");
-      imageWrapper.className = "image-wrapper";
-      image.parentNode.replaceChild(imageWrapper, image);
-      imageWrapper.appendChild(image);
-      const square = document.createElement("div");
-      square.className = "square";
-      square.id = image.id;
-      imageWrapper.insertBefore(square, image);
-      square.addEventListener("click", deleteButton);
-      const trashcan = document.createElement("i");
-      trashcan.classList = "fa-solid fa-trash-can fa-sm";
-      trashcan.id = image.id;
-      square.appendChild(trashcan);
-    });
+function showWorks(works) {
+  const worksModal = document.createElement("div");
+  modalWorks.appendChild(worksModal);
+  modalWorks.innerHTML = "";
+  for (let work of works) {
+    const img = document.createElement("img");
+    img.src = work.imageUrl;
+    img.id = work.id;
+    modalWorks.appendChild(img);
+  }
+  const images = modalWorks.querySelectorAll("img");
+  images.forEach(function (image) {
+    const imageWrapper = document.createElement("div");
+    imageWrapper.className = "image-wrapper";
+    image.parentNode.replaceChild(imageWrapper, image);
+    imageWrapper.appendChild(image);
+    const square = document.createElement("div");
+    square.className = "square";
+    square.id = image.id;
+    imageWrapper.id = image.id;
+    imageWrapper.insertBefore(square, image);
+    square.addEventListener("click", deleteButton);
+    const trashcan = document.createElement("i");
+    trashcan.classList = "fa-solid fa-trash-can fa-sm";
+    trashcan.id = image.id;
+    square.appendChild(trashcan);
   });
 }
 
 // bouton suppression
 function deleteButton(e) {
+  e.preventDefault();
   const square = e.currentTarget;
   const imgId = square.id;
   const token = localStorage.getItem("token");
-  console.log(token);
   const confirmation = window.confirm(
     "Êtes-vous sûr de vouloir supprimer cet élément?"
   );
@@ -136,13 +137,13 @@ function deleteButton(e) {
     })
       .then((response) => {
         if (response.ok) {
-          const image = document.getElementById(imgId);
-          if (image) {
-            const imgWrapper = image.closest(".image-wrapper");
-            if (imgWrapper) {
-              imgWrapper.remove();
-            }
-          }
+          alert("La photo a bien été supprimée.");
+          getWorks().then((response) => {
+            renderWorks(response);
+            showWorks(response);
+            console.log(response);
+          });
+          // renderWorks(works);
         } else {
           alert("Erreur lors de la suppression");
         }
@@ -160,18 +161,47 @@ function validateAddImage() {
   const titleInput = document.querySelector("#titre");
   const categorySelect = document.querySelector("#categorie");
   const imgFile = imgInput.files[0];
+  const imgFileName = imgFile ? imgFile.name.toLowerCase() : null;
+  const maxSize = 4 * 1024 * 1024;
+  const allowedFormats = ["jpg", "jpeg", "png"];
   const title = titleInput.value;
   const category = categorySelect.value;
   if (imgInput.files.length === 0) {
     alert("Veuillez sélectionner une image.");
     return;
   }
+  if (imgFile.size > maxSize) {
+    alert("Votre image est trop volumineuse.");
+    return;
+  }
+  if (!allowedFormats.some((format) => imgFileName.endsWith(format))) {
+    alert("Votre image n'est pas au bon format (jpg, jpeg ou png).");
+    return;
+  }
+  if (!imgFile) {
+    alert("Veuillez choisir une image.");
+    return;
+  }
+  if (
+    imgFileName &&
+    !allowedFormats.some((format) => imgFileName.endsWith(format))
+  ) {
+    alert("Votre image n'est pas au bon format (jpg, jpeg ou png).");
+    imgInput.value = "";
+    return;
+  }
+  if (titleInput.value === "") {
+    alert("Veuillez renseigner un titre.");
+    return;
+  }
+  if (categorySelect.value === "") {
+    alert("Veuillez renseigner une catégorie.");
+    return;
+  }
   const formData = new FormData();
   formData.append("image", imgFile);
   formData.append("title", title);
   formData.append("category", category);
-  formData.append("efsefesf", "zqzdqzdqzd");
-  console.log(formData);
   fetch(`http://localhost:5678/api/works`, {
     method: "POST",
     body: formData,
@@ -182,6 +212,17 @@ function validateAddImage() {
     .then((response) => {
       if (response.ok) {
         alert("La photo a bien été ajoutée.");
+        const newFigure = document.createElement("figure");
+        const newImage = document.createElement("img");
+        const newFigcaption = document.createElement("figcaption");
+        newImage.src = URL.createObjectURL(imgFile);
+        newFigcaption.innerHTML = titleInput.value;
+        document.querySelector(".gallery").appendChild(newFigure);
+        newFigure.append(newImage, newFigcaption);
+        document.querySelector(".add-img-form").reset();
+        document.querySelector("output img").src =
+          "./assets/icons/add-photo.png";
+        // closeModal2(e);
       } else {
         alert("Quelque chose s'est mal passé.");
       }
@@ -209,7 +250,8 @@ function displayImage() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function (e) {
+  e.preventDefault();
   document.querySelector(".js-modal").addEventListener("click", openModal);
   document.querySelector(".add-button").addEventListener("click", function (e) {
     closeModal(e);
@@ -222,8 +264,6 @@ document.addEventListener("DOMContentLoaded", function () {
       openModal(e);
     });
   getWorks();
-  // showWorks();
-  // renderWorks();
   document
     .querySelector(".container-button .submit-button")
     .addEventListener("click", validateAddImage);

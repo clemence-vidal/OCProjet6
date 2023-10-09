@@ -67,7 +67,7 @@
 							<i class="fa-solid fa-xmark fa-xl js-modal-close2"></i>
 						</div>
 						<h3 class="title-modal">Ajout photo</h3>
-						<form method="post">
+						<form method="post" class="add-img-form">
 							<div class="works-modal">
 								<img src="./assets/icons/add-photo.png" alt="add-photo">
 								<output></output>	
@@ -81,9 +81,9 @@
 							<label for="categorie">Catégorie</label>
 							<select id="categorie">
 								<option value=""></option>
-								<option value="categorie1">Objets</option>
-								<option value="categorie2">Appartements</option>
-								<option value="categorie3">Hotels & restaurants</option>
+								<option value="1">Objets</option>
+								<option value="2">Appartements</option>
+								<option value="3">Hotels & restaurants</option>
 							</select>
 							<div class="line"></div>						
 						</form>
@@ -102,7 +102,7 @@
 						<input type="email" name="email" id="email">
 						<label for="message">Message</label>
 						<textarea name="message" id="message" cols="30" rows="10"></textarea>
-						<input type="submit" value="Envoyer" class="button">
+						<input type="submit" value="Envoyer" class="button" onClick="return false">
 					</form>
 				</section>
 			</main>					
