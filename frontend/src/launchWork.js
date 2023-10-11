@@ -1,12 +1,7 @@
+import { getWorks } from "./api/worksApi.js";
 let works;
 let filteredWorks = [];
 let selectedFilters = [];
-
-async function getWorks() {
-  const response = await fetch(`http://localhost:5678/api/works`);
-  const works = await response.json();
-  return works;
-}
 
 function renderWorks(works) {
   const gallery = document.querySelector(".gallery");

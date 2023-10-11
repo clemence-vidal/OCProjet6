@@ -10,12 +10,6 @@ allFilter.id = "all";
 portfolio.insertBefore(styleFilter, gallery);
 styleFilter.appendChild(allFilter);
 
-async function getFilter() {
-  const response = await fetch(`http://localhost:5678/api/categories`);
-  const filters = await response.json();
-  return filters;
-}
-
 function createFilter(filter) {
   for (let f of filter) {
     const divFilter = document.createElement("div");
