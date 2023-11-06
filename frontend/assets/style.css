@@ -334,9 +334,9 @@ li:hover{
 	background-color: white;
 }
 
-/* .modal2 label {
-	margin-top: 20px;
-} */
+.modal2 label {
+	margin-top: 25px;
+}
 
 .modal2 input,
 .modal2 select {
@@ -378,7 +378,7 @@ li:hover{
 	background-color: #E8F1F6;
 	align-items: center;
     justify-content: space-evenly;
-	margin-bottom: 35px;
+	/* margin-bottom: 35px; */
 }
 
 .works-modal img {
@@ -517,8 +517,22 @@ li > span {
 	display: none;
 	text-align: center;
 	font-weight: bold;
-	margin-top: 15px;
-	margin-bottom: -29px;
+	background-color: white;
+}
+
+.error-message-img {
+	margin-top: 5px;
+	margin-bottom: -19px;
+}
+
+.error-message-title {
+	margin-top: -19px;
+	margin-bottom: 5px;
+}
+
+.error-message-category {
+	margin-top: 5px;
+	margin-bottom: -19px;
 }
 
 .container,

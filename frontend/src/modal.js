@@ -35,7 +35,26 @@ const openModal2 = function (e) {
   modal
     .querySelector(".js-modal-stop2")
     .addEventListener("click", stopPropagation);
+  getFilter().then((filter) => {
+    if (filter) {
+      const selectCategory = document.querySelector("#categorie");
+      for (let f of filter) {
+        const optionFilter = document.createElement("option");
+        optionFilter.value = f.id;
+        optionFilter.innerHTML = f.name;
+        selectCategory.appendChild(optionFilter);
+      }
+    }
+  });
+  clearSelectOptions();
 };
+
+function clearSelectOptions() {
+  const selectCategory = document.querySelector("#categorie");
+  while (selectCategory.options.length > 1) {
+    selectCategory.remove(1);
+  }
+}
 
 // fermer la modale Galerie photo
 const closeModal = function (e) {
@@ -143,7 +162,6 @@ function deleteButton(e) {
             showWorks(response);
             console.log(response);
           });
-          // renderWorks(works);
         } else {
           alert("Erreur lors de la suppression");
         }
@@ -166,36 +184,64 @@ function validateAddImage() {
   const allowedFormats = ["jpg", "jpeg", "png"];
   const title = titleInput.value;
   const category = categorySelect.value;
+  const errorMessageImg = document.querySelector(".error-message-img");
+  const errorMessageTitle = document.querySelector(".error-message-title");
+  const errorMessageCategory = document.querySelector(
+    ".error-message-category"
+  );
   if (imgInput.files.length === 0) {
-    alert("Veuillez sélectionner une image.");
+    errorMessageImg.style.display = "block";
+    errorMessageImg.textContent = "Veuillez sélectionner une image.";
+    setTimeout(() => {
+      errorMessageImg.style.display = "none";
+    }, 5000);
     return;
   }
   if (imgFile.size > maxSize) {
-    alert("Votre image est trop volumineuse.");
+    errorMessageImg.style.display = "block";
+    errorMessageImg.textContent = "Votre image est trop volumineuse.";
+    setTimeout(() => {
+      errorMessageImg.style.display = "none";
+    }, 5000);
     return;
   }
   if (!allowedFormats.some((format) => imgFileName.endsWith(format))) {
-    alert("Votre image n'est pas au bon format (jpg, jpeg ou png).");
+    errorMessageImg.style.display = "block";
+    errorMessageImg.textContent =
+      "Votre image n'est pas au bon format (jpg, jpeg ou png).";
+    setTimeout(() => {
+      errorMessageImg.style.display = "none";
+    }, 5000);
     return;
   }
-  if (!imgFile) {
-    alert("Veuillez choisir une image.");
-    return;
-  }
-  if (
-    imgFileName &&
-    !allowedFormats.some((format) => imgFileName.endsWith(format))
-  ) {
-    alert("Votre image n'est pas au bon format (jpg, jpeg ou png).");
-    imgInput.value = "";
-    return;
-  }
+  // if (!imgFile) {
+  //   errorMessageImg.style.display = "block";
+  //   errorMessageImg.textContent = "Veuillez sélectionner une image.";
+  //   return;
+  // }
+  // if (
+  //   imgFileName &&
+  //   !allowedFormats.some((format) => imgFileName.endsWith(format))
+  // ) {
+  //   errorMessageImg.style.display = "block";
+  //   errorMessageImg.textContent =
+  //     "Votre image n'est pas au bon format (jpg, jpeg ou png).";
+  //   return;
+  // }
   if (titleInput.value === "") {
-    alert("Veuillez renseigner un titre.");
+    errorMessageTitle.style.display = "block";
+    errorMessageTitle.textContent = "Veuillez renseigner un titre.";
+    setTimeout(() => {
+      errorMessageTitle.style.display = "none";
+    }, 5000);
     return;
   }
   if (categorySelect.value === "") {
-    alert("Veuillez renseigner une catégorie.");
+    errorMessageCategory.style.display = "block";
+    errorMessageCategory.textContent = "Veuillez renseigner une catégorie.";
+    setTimeout(() => {
+      errorMessageCategory.style.display = "none";
+    }, 5000);
     return;
   }
   const formData = new FormData();
@@ -264,6 +310,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
       openModal(e);
     });
   getWorks();
+  // let filter;
   document
     .querySelector(".container-button .submit-button")
     .addEventListener("click", validateAddImage);
